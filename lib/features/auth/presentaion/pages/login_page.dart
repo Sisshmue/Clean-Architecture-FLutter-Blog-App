@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                 isObscureText: true,
               ),
               SizedBox(height: 20),
-              AuthGradientButton(buttonText: 'Sign in'),
+              AuthGradientButton(buttonText: 'Sign in', onPressed: () {}),
               SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
