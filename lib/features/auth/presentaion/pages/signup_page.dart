@@ -49,7 +49,6 @@ class _SignupPageState extends State<SignupPage> {
                   child: BlocConsumer<AuthBloc, AuthState>(
                     listener: (BuildContext context, state) {
                       if (state is AuthFailure) {
-                        print('Hello');
                         showSnackBar(context, state.message);
                       }
                     },
@@ -90,9 +89,6 @@ class _SignupPageState extends State<SignupPage> {
                               buttonText: 'Sign up',
                               onPressed: () {
                                 if (formKey.currentState!.validate()) {
-                                  print(nameController.text);
-                                  print(emailController.text);
-                                  print(passwordController.text);
                                   context.read<AuthBloc>().add(
                                     AuthSignUp(
                                       nameController.text,
