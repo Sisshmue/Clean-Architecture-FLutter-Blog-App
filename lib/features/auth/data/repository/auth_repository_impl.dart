@@ -1,9 +1,10 @@
 import 'package:blog_app_clean_architecture/core/error/exception.dart';
 import 'package:blog_app_clean_architecture/core/error/failure.dart';
 import 'package:blog_app_clean_architecture/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:blog_app_clean_architecture/features/auth/data/model/user_model.dart';
 import 'package:blog_app_clean_architecture/features/auth/domain/entity/user.dart';
 import 'package:blog_app_clean_architecture/features/auth/domain/repository/auth_repository.dart';
-import 'package:fpdart/src/either.dart';
+import 'package:fpdart/fpdart.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDatasource authRemoteDatasource;
@@ -13,9 +14,13 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, User>> logInWithEmailPassword({
     required String email,
     required String password,
-  }) {
-    // TODO: implement logInWithEmailPassword
-    throw UnimplementedError();
+  }) async {
+    return _auth(
+      authRemoteDatasource.logInWithEmailPassword(
+        email: email,
+        password: password,
+      ),
+    );
   }
 
   @override
@@ -24,13 +29,18 @@ class AuthRepositoryImpl implements AuthRepository {
     required String email,
     required String password,
   }) async {
-    try {
-      final user = await authRemoteDatasource.signUpWithEmailPassword(
+    return _auth(
+      authRemoteDatasource.signUpWithEmailPassword(
         name: name,
         email: email,
         password: password,
-      );
+      ),
+    );
+  }
 
+  Future<Either<Failure, User>> _auth(Future<UserModel> authCall) async {
+    try {
+      final user = await authCall;
       return right(user);
     } on ServerException catch (e) {
       return left(Failure(e.message));

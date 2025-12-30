@@ -1,4 +1,5 @@
 import 'package:blog_app_clean_architecture/features/auth/domain/repository/auth_repository.dart';
+import 'package:blog_app_clean_architecture/features/auth/domain/usecases/user_log_in.dart';
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../core/secrets/app_secrets.dart';
@@ -10,12 +11,12 @@ import '../features/auth/presentaion/bloc/auth_bloc.dart';
 final serviceLocator = GetIt.instance;
 
 Future<void> initDependencies() async {
-  initAuth();
   final supabase = await Supabase.initialize(
     url: AppSecrets.supabaseUrl,
     anonKey: AppSecrets.anonKey,
   );
   serviceLocator.registerLazySingleton(() => supabase.client);
+  initAuth();
 }
 
 void initAuth() {
@@ -29,7 +30,9 @@ void initAuth() {
 
   serviceLocator.registerFactory(() => UserSignUp(serviceLocator()));
 
+  serviceLocator.registerFactory(() => UserLogIn(serviceLocator()));
+
   serviceLocator.registerLazySingleton(
-    () => AuthBloc(userSignUp: serviceLocator()),
+    () => AuthBloc(userSignUp: serviceLocator(), userLogin: serviceLocator()),
   );
 }

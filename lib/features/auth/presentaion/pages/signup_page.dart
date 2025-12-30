@@ -49,6 +49,7 @@ class _SignupPageState extends State<SignupPage> {
                   child: BlocConsumer<AuthBloc, AuthState>(
                     listener: (BuildContext context, state) {
                       if (state is AuthFailure) {
+                        print('Hello');
                         showSnackBar(context, state.message);
                       }
                     },

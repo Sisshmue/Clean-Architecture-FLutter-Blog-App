@@ -22,9 +22,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDatasource {
   Future<UserModel> logInWithEmailPassword({
     required String email,
     required String password,
-  }) {
-    // TODO: implement logInWithEmailPassword
-    throw UnimplementedError();
+  }) async {
+    return _auth(
+      supabaseClient.auth.signInWithPassword(email: email, password: password),
+    );
   }
 
   @override
@@ -33,14 +34,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDatasource {
     required String email,
     required String password,
   }) async {
-    try {
-      print('Email: "$email"');
-      print('Password: "$password"');
-      final response = await supabaseClient.auth.signUp(
+    return _auth(
+      supabaseClient.auth.signUp(
         password: password,
         email: email,
         data: {'name': name},
-      );
+      ),
+    );
+  }
+
+  Future<UserModel> _auth(Future<AuthResponse> authCall) async {
+    try {
+      final response = await authCall;
       if (response.user == null) {
         throw ServerException('User is null');
       }
