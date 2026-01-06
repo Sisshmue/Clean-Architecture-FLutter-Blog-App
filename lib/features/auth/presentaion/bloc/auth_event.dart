@@ -15,3 +15,5 @@ final class AuthLogIn extends AuthEvent {
   final String password;
   AuthLogIn({required this.email, required this.password});
 }
+
+final class AuthIsUserLogin extends AuthEvent {}
